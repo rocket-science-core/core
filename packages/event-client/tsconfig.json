@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "esnext",
+    "module": "esnext"
+  },
+  "extends": "@rocket-science-core/tsconfig/base.json",
+  "include": ["src"]
+}

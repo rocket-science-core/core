@@ -1,0 +1,31 @@
+{
+  "name": "@rocket-science-core/event-client",
+  "version": "1.0.0",
+  "description": "Event library for the browser",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "rimraf dist"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.3",
+    "eslint": "^7.32.0",
+    "@rocket-science-core/eslint-config-custom": "workspace:*",
+    "@rocket-science-core/tsconfig": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rocket-science-core/events.git"
+  },
+  "homepage": "https://github.com/rocket-science-core/events#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
