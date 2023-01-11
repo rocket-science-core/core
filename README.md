@@ -1,1 +1,1 @@
-Events library for native browser communication
+Events libraries for native browser communication
