@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "description": "Event library for the browser",
   "main": "dist/index.js",
+  "source": "src/index.ts",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/**"
   ],
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "prebuild": "rimraf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "dev": "tsc -w",
+    "prebuild": "rimraf dist",
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\""
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
