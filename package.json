@@ -1,5 +1,5 @@
 {
-  "name": "@rocket-science-core/events",
+  "name": "@rocket-science-core/core",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -18,7 +18,8 @@
     "@rocket-science-core/eslint-config-custom": "workspace:*",
     "cz-conventional-changelog": "^3.3.0",
     "prettier": "latest",
-    "turbo": "latest"
+    "turbo": "latest",
+    "commitizen": "^4.2.6"
   },
   "engines": {
     "node": ">=14.0.0"
