@@ -6,12 +6,14 @@ importers:
     specifiers:
       '@changesets/cli': ^2.26.0
       '@rocket-science-core/eslint-config-custom': workspace:*
+      commitizen: ^4.2.6
       cz-conventional-changelog: ^3.3.0
       prettier: latest
       turbo: latest
     devDependencies:
       '@changesets/cli': 2.26.0
       '@rocket-science-core/eslint-config-custom': link:packages/eslint-config-custom
+      commitizen: 4.2.6
       cz-conventional-changelog: 3.3.0
       prettier: 2.8.2
       turbo: 1.7.0
