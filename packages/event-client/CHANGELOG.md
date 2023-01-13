@@ -1,5 +1,11 @@
 # @rocket-science-core/event-client
 
+## 1.0.2
+
+### Patch Changes
+
+- 52a5794: improve client types such as substitution of `any` types for `unknown` types, return void explicitely from methods, and enhance file comments
+
 ## 1.0.1
 
 ### Patch Changes
