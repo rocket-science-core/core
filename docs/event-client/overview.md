@@ -4,6 +4,7 @@ A lightweight event client that augments DOM events.
 - [Usage](#usage)
   - [Basic](#basic)
   - [With Typescript and Zod](#with-typescript-and-zod)
+- [API](#api)
 
 ## Motivation
 
@@ -241,3 +242,16 @@ type HostEmitters = CartListeners & SomeOtherRemoteListeners {
 
 const eventsClient = new EventsClient<HostListeners, HostEmitters>();
 ```
+
+## API
+
+- `on: (type: EventType, listener: (event: Listeners[EventType]) => void, schema?: ZodSchema<unknown>, options?: AddEventListenerOptions): void`
+  - Listen for an event. The event listener will be added to the `window` by calling `window.addEventListener`.
+  - If `schema` is provided for payload, it will be parsed when the event executes.
+- `remove: (type: keyof Listeners)`
+  - Event will be removed from `window`.
+- `emit: (type: EventType, ctx: Emitters[EventType]["detail"]): void`
+  - Emit an event. This will create a `new CustomEvent` and will call `window.dispatchEvent`.
+  - The context (`ctx`) of the event is the payload.
+- `invoke: (type: EventType, ctx: Listeners[EventType]["detail"]): void`
+  - Synonymous in functionality with `emit` but will provide type definitions for emitting a client's Listener.
