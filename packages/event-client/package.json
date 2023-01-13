@@ -17,17 +17,26 @@
     "lint": "TIMING=1 eslint \"src/**/*.ts*\""
   },
   "devDependencies": {
+    "@rocket-science-core/eslint-config-custom": "workspace:*",
+    "@rocket-science-core/tsconfig": "workspace:*",
+    "eslint": "^7.32.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.8.3",
-    "eslint": "^7.32.0",
-    "@rocket-science-core/eslint-config-custom": "workspace:*",
-    "@rocket-science-core/tsconfig": "workspace:*"
+    "zod": "^3.20.2"
+  },
+  "peerDependencies": {
+    "zod": ">= 3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rocket-science-core/events.git"
+    "url": "git+https://github.com/rocket-science-core/core.git"
   },
-  "homepage": "https://github.com/rocket-science-core/events#readme",
+  "homepage": "https://github.com/rocket-science-core/core#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
