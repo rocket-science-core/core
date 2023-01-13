@@ -1,3 +1,5 @@
+import { ZodSchema } from "zod";
+
 export class EventsClient<
   Listeners extends Record<string, CustomEvent<any>>,
   Emitters extends Record<string, CustomEvent<any>>
@@ -7,7 +9,7 @@ export class EventsClient<
   on<EventType extends keyof Listeners>(
     type: EventType,
     listener: (ev: Listeners[EventType]) => any,
-    schema?: any,
+    schema?: ZodSchema<any>,
     options?: boolean | AddEventListenerOptions
   ): void {
     const customListener = (event: Listeners[EventType]) => {
