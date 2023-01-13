@@ -1,5 +1,10 @@
 A lightweight event client that augments DOM events.
 
+- [Motivation](#motivation)
+- [Usage](#usage)
+  - [Basic](#basic)
+  - [With Typescript and Zod](#with-typescript-and-zod)
+
 ## Motivation
 
 This client is primarily built for decoupled communication between **host** and **remote** applications leveraging [module federation](https://webpack.js.org/concepts/module-federation/) to load components from remote locations. However, it can be used by any application and does not rely on any particular build system or framework (one of the core ideas behind module federation).
@@ -73,10 +78,10 @@ const App = () => {
   return (
     <div>
       <h1>Ecomm Store</h1>
-        <ItemList items={items} handleAddToCart={handleClick} />
-        <React.Suspense fallback="loading cart">
-          <RemoteCart></RemoteCart>
-        </React.Suspense>
+      <ItemList items={items} handleAddToCart={handleClick} />
+      <React.Suspense fallback="loading cart">
+        <RemoteCart></RemoteCart>
+      </React.Suspense>
     </div>
   );
 };
@@ -219,5 +224,20 @@ const App = () => {
 export default App;
 ```
 
+You may want to define `Listeners` and `Emitters` for your **host**, and you may also have more than one **remote**.
 
+Simply use [Intersection Types](https://www.typescriptlang.org/docs/handbook/2/objects.html#extending-types) to combine them together.
 
+```ts
+type HostListeners = CartEmitters & {
+  "someHostEvent": CustomEvent<{
+    message: string
+  }>
+};
+
+type HostEmitters = CartListeners & SomeOtherRemoteListeners {
+  // ...
+}
+
+const eventsClient = new EventsClient<HostListeners, HostEmitters>();
+```
