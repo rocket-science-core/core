@@ -43,8 +43,8 @@ module.exports = {
     "storybook-addon-performance/register",
     "@storybook/addon-links",
     "@storybook/addon-a11y",
-    "@storybook/addon-interactions",
     { name: "@storybook/addon-essentials", options: { actions: false } },
+    "@storybook/addon-interactions",
   ],
   framework: "@storybook/react",
   core: {
