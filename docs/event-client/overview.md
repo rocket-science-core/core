@@ -1,8 +1,8 @@
+A lightweight event client that augments DOM events.
+
 <a href="https://bundlephobia.com/package/@rocket-science-core/event-client@latest" target="\_parent">
 <img alt="" src="https://badgen.net/bundlephobia/minzip/@rocket-science-core/event-client" />
 </a>
-
-A lightweight event client that augments DOM events.
 
 - [Motivation](#motivation)
 - [Usage](#usage)
@@ -13,7 +13,9 @@ A lightweight event client that augments DOM events.
 
 ## Motivation
 
-This client is primarily built for decoupled communication between **host** and **remote** applications leveraging [module federation](https://webpack.js.org/concepts/module-federation/) to load components from remote locations. However, it can be used by any application and does not rely on any particular build system or framework (one of the core ideas behind module federation).
+The event client is primarily built for _decoupled_ communication between **host** and **remote** applications leveraging [module federation](https://webpack.js.org/concepts/module-federation/) to load components from remote locations. However, the event client can be used by any application and does not rely on any particular build system or framework. Rather than relying on a framework specific implementation for passing data to UI components such as [props](https://reactjs.org/docs/components-and-props.html) in React, the event client enables a **framework agnostic** approach by using [custom DOM events](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent) on the [Window](https://developer.mozilla.org/en-US/docs/Web/API/Window) to pass data between UI components.
+
+While possible, it can be challenging to implement a good type and event payload schema validation system around DOM events. The event client makes this simple!
 
 ## Usage
 
