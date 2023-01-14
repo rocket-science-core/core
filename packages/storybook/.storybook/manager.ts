@@ -5,7 +5,7 @@ import { themes } from "@storybook/theming";
 // import RocketScienceTheme from "./theme";
 
 const temporaryTheme = {
-  ...themes.dark,
+  ...themes.light,
   brandTitle: "Rocket Science",
   brandUrl: "https://github.com/rocket-science-core/core",
   brandImage:

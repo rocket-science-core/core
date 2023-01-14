@@ -1,7 +1,7 @@
+import type { StorybookConfig } from "@storybook/core-common";
 import { Configuration } from "webpack";
 const glob = require("glob");
 
-type configTypeTs = "DEVELOPMENT" | "PRODUCTION";
 type monorepoPackage = {
   location: string;
   package: {
@@ -25,19 +25,31 @@ const packages: monorepoPackage[] = getPackages("../../").filter(
 
 const storiesInPackages: string[] = packages
   .map(({ location }) => {
+    // const loc = location.split("/").splice(1, 2).join("/");
     const files = glob.sync(
       `${location}/src/**/*.stories.@(js|jsx|ts|tsx|mdx)`
     );
+
     if (files.length > 0) {
       return files;
     } else {
       return [];
     }
   })
-  .flat();
+  .flat()
+  .map((story) =>
+    story
+      .split("/")
+      .filter((dir: string) => !dir.includes("packages"))
+      .join("/")
+  );
 
-module.exports = {
+console.log("===== storiesInPackages ===== ");
+console.log(storiesInPackages);
+
+const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(js|jsx|ts|tsx|mdx)", ...storiesInPackages],
+  features: { buildStoriesJson: true },
   addons: [
     "storybook-readme",
     "storybook-addon-performance/register",
@@ -51,8 +63,8 @@ module.exports = {
     builder: "@storybook/builder-webpack5",
   },
   webpackFinal: (
-    config: Configuration,
-    { configType }: { configType: configTypeTs }
+    config: Configuration
+    // { configType }
   ) => {
     // `configType` has a value of 'DEVELOPMENT' or 'PRODUCTION'
     // You can change the configuration based on that.
@@ -89,3 +101,8 @@ module.exports = {
     return config;
   },
 };
+console.log("===== config.stories ===== ");
+
+console.log(config.stories);
+
+module.exports = config;

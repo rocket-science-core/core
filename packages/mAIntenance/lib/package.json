@@ -1,0 +1,50 @@
+{
+    "name": "maintenanceai",
+    "version": "2.1.5",
+    "description": "Test package one.",
+    "author": "Austin Howard <ahoward@austinhoward.tech>",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "bin": {
+        "mAIntenance": "./lib/index.js"
+    },
+    "type": "module",
+    "keywords": [
+        "test",
+        "package"
+    ],
+    "directories": {
+        "lib": "lib"
+    },
+    "files": [
+        "lib"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "build": "tsc",
+        "prebuild": "rimraf lib",
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://gitlab.com/ahoward21/test-turbo-monorepo.git"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://gitlab.com/ahoward21/test-turbo-monorepo/issues"
+    },
+    "homepage": "https://gitlab.com/ahoward21/test-turbo-monorepo#readme",
+    "devDependencies": {
+        "@types/glob": "^8.0.0",
+        "@types/inquirer": "^9.0.3",
+        "doasync": "^2.0.1",
+        "openai": "^3.1.0",
+        "typescript": "^4.8.3"
+    },
+    "dependencies": {
+        "glob": "^8.0.3",
+        "inquirer": "^9.1.4"
+    }
+}
