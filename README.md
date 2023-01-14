@@ -6,4 +6,5 @@ Core libraries for the rocket science ecosystem.
 
 ## Docs
 
-- [event-client](./docs/event-client/overview.md)
+**[event-client](./docs/event-client/overview.md)**
+<a href="https://bundlephobia.com/package/@tanstack/react-query@latest" target="\_parent">

@@ -1,3 +1,7 @@
+<a href="https://bundlephobia.com/package/@rocket-science-core/event-client@latest" target="\_parent">
+<img alt="" src="https://badgen.net/bundlephobia/minzip/@rocket-science-core/event-client" />
+</a>
+
 A lightweight event client that augments DOM events.
 
 - [Motivation](#motivation)
@@ -5,6 +9,7 @@ A lightweight event client that augments DOM events.
   - [Basic](#basic)
   - [With Typescript and Zod](#with-typescript-and-zod)
 - [API](#api)
+- [Examples](#examples)
 
 ## Motivation
 
@@ -255,3 +260,7 @@ const eventsClient = new EventsClient<HostListeners, HostEmitters>();
   - The context (`ctx`) of the event is the payload.
 - `invoke: (type: EventType, ctx: Listeners[EventType]["detail"]): void`
   - Synonymous in functionality with `emit` but will provide type definitions for emitting a client's Listener.
+
+## Examples
+
+- [E-commerce Cart Remote App](https://github.com/ahoward2/zod-modfed)
