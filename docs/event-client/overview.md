@@ -107,8 +107,11 @@ Zod is _optional_ but powerful when used in conjuction with the event client.
 
 Define a schema and export types from **remote**.
 
+You can define events by importing the `Event` type and passing the event's payload type.
+
 ```ts
 import { z } from "zod";
+import { Event } from "@rocket-science-core/event-client";
 
 export const ItemSchema = z.object({
   id: z.number(),
@@ -120,13 +123,13 @@ export const ItemSchema = z.object({
 export type Item = z.infer<typeof ItemSchema>;
 
 export type Listeners = {
-  addItemToCart: CustomEvent<Item>;
-  removeItemFromCart: CustomEvent<Item>;
+  addItemToCart: Event<Item>;
+  removeItemFromCart: Event<Item>;
 };
 
 export type Emitters = {
-  itemAddedToCart: CustomEvent<Item>;
-  itemRemovedFromCart: CustomEvent<Item>;
+  itemAddedToCart: Event<Item>;
+  itemRemovedFromCart: Event<Item>;
 };
 ```
 
@@ -155,23 +158,31 @@ export const Cart = () => {
   useEffect(() => {
     eventsClient.on(
       "addItemToCart",
-      ({ detail }) => {
-        setItems((current) => [detail, ...current]);
-        eventsClient.emit("itemAddedToCart", detail);
+      ({ detail, error }) => {
+        if (error) {
+          console.error(error)
+        } else {
+          setItems((current) => [detail, ...current]);
+          eventsClient.emit("itemAddedToCart", detail);
+        }
       },
       ItemSchema
     );
     eventsClient.on(
       "removeItemFromCart",
-      ({ detail }) => {
-        setItems((current) => {
-          const itemIndex = current.findIndex(
-            (itemSearched) => itemSearched.id === detail.id
-          );
-          current.splice(itemIndex, 1);
-          return [...current];
-        });
-        eventsClient.emit("itemRemovedFromCart", detail);
+      ({ detail, error }) => {
+        if (error) {
+          console.error(error)
+        } else {
+          setItems((current) => {
+            const itemIndex = current.findIndex(
+              (itemSearched) => itemSearched.id === detail.id
+            );
+            current.splice(itemIndex, 1);
+            return [...current];
+          });
+          eventsClient.emit("itemRemovedFromCart", detail);
+        }
       },
       ItemSchema
     );
@@ -238,7 +249,7 @@ Simply use [Intersection Types](https://www.typescriptlang.org/docs/handbook/2/o
 
 ```ts
 type HostListeners = CartEmitters & {
-  "someHostEvent": CustomEvent<{
+  "someHostEvent": Event<{
     message: string
   }>
 };
@@ -254,7 +265,7 @@ const eventsClient = new EventsClient<HostListeners, HostEmitters>();
 
 - `on: (type: EventType, listener: (event: Listeners[EventType]) => void, schema?: ZodSchema<unknown>, options?: AddEventListenerOptions): void`
   - Listen for an event. The event listener will be added to the `window` by calling `window.addEventListener`.
-  - If `schema` is provided for payload, it will be parsed when the event executes.
+  - If `schema` is provided for payload, it will be parsed when the event executes. The `safeParse` method is used, any errors due to parsing are attached to the event object `event.error`.
 - `remove: (type: keyof Listeners)`
   - Event will be removed from `window`.
 - `emit: (type: EventType, ctx: Emitters[EventType]["detail"]): void`
