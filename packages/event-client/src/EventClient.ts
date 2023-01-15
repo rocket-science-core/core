@@ -1,12 +1,16 @@
-import { ZodSchema } from "zod";
+import { ZodSchema, ZodError } from "zod";
+
+export type Event<T> = CustomEvent<T> & {
+  error?: ZodError<Partial<T>>;
+};
 
 /**
  * A client for emitting and listening to events via the window object.
  * @example const client = new EventsClient();
  */
 export class EventsClient<
-  Listeners extends Record<string, CustomEvent<unknown>>,
-  Emitters extends Record<string, CustomEvent<unknown>>
+  Listeners extends Record<string, Event<unknown>>,
+  Emitters extends Record<string, Event<unknown>>
 > {
   private events = new Map<keyof Listeners, unknown>();
 
@@ -16,14 +20,17 @@ export class EventsClient<
   on<EventType extends keyof Listeners>(
     type: EventType,
     listener: (event: Listeners[EventType]) => void,
-    schema?: ZodSchema<unknown>,
+    schema?: ZodSchema,
     options?: AddEventListenerOptions
   ): void {
     const customListener: typeof listener = (event: Listeners[EventType]) => {
       if (schema) {
-        schema.parse(event.detail);
+        const result = schema.safeParse(event.detail);
+        if (!result.success) {
+          event.error = result.error;
+        }
       }
-      return listener(event);
+      listener(event);
     };
 
     this.events.set(type, customListener);
