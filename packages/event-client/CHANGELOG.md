@@ -1,5 +1,11 @@
 # @rocket-science-core/event-client
 
+## 3.0.0
+
+### Major Changes
+
+- 33d96d1: Internal tracking of listeners will now be stored by serializing the user provided event type and event key to avoid bug where additional event listeners of the same time are overriden. This is more in line with the way event listeners work in the browser except our implementation allows users to add and remove events by a serializable key. This is a major api change but required.
+
 ## 2.0.0
 
 ### Major Changes
