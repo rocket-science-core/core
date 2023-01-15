@@ -45,13 +45,14 @@ export const Cart = () => {
   useEffect(() => {
     eventsClient.on(
       "addItemToCart",
+      "setToState",
       ({ detail }) => {
         setItems((current) => [detail, ...current]);
         eventsClient.emit("itemAddedToCart", detail);
       }
     );
     return () => {
-      eventsClient.remove("addItemToCart");
+      eventsClient.remove({ type: "addItemToCart", key: "setToState"});
     };
   }, []);
 
@@ -67,7 +68,7 @@ export const Cart = () => {
 Instantiate new client in **host**.
 
 ```js
-import React from "react";
+import React, { useEffect } from "react";
 import { ItemList } from "./ItemList";
 import { items } from "./items";
 import { EventsClient } from "@rocket-science-core/event-client";
@@ -80,9 +81,15 @@ const handleClick = (item) => {
 };
 
 const App = () => {
-  eventsClient.on("itemAddedToCart", ({ detail }) => {
-    console.log(`Item added to cart: ${detail.price}`);
-  });
+  useEffect(() => {
+    eventsClient.on("itemAddedToCart", "logToConsole", ({ detail }) => {
+      console.log(`Item added to cart: ${detail.price}`);
+    });
+    return () => {
+      eventsClient.remove({ type: "itemAddedToCart", key: "logToConsole" });
+    };
+  }, []);
+
   return (
     <div>
       <h1>Ecomm Store</h1>
@@ -158,6 +165,7 @@ export const Cart = () => {
   useEffect(() => {
     eventsClient.on(
       "addItemToCart",
+      "setItemToState",
       ({ detail, error }) => {
         if (error) {
           console.error(error)
@@ -170,6 +178,7 @@ export const Cart = () => {
     );
     eventsClient.on(
       "removeItemFromCart",
+      "remoteItemFromState",
       ({ detail, error }) => {
         if (error) {
           console.error(error)
@@ -187,8 +196,8 @@ export const Cart = () => {
       ItemSchema
     );
     return () => {
-      eventsClient.remove("addItemToCart");
-      eventsClient.remove("removeItemFromCart");
+      eventsClient.remove("addItemToCart", "setItemToState");
+      eventsClient.remove("removeItemFromCart", "removeItemFromState");
     };
   }, []);
 
@@ -224,9 +233,14 @@ const handleClick = (item: Item) => {
 };
 
 const App = () => {
-  eventsClient.on("itemAddedToCart", ({ detail }) => {
-    console.log(`Item added to cart: ${detail.price}`);
-  });
+  useEffect(() => {
+    eventsClient.on("itemAddedToCart", "logToConsole", ({ detail }) => {
+      console.log(`Item added to cart: ${detail.price}`);
+    });
+    return () => {
+      eventsClient.remove({ type: "itemAddedToCart", key: "logToConsole" });
+    };
+  }, []);
   return (
     <AppWrapper>
       <h1>Ecomm Store</h1>
@@ -263,11 +277,12 @@ const eventsClient = new EventsClient<HostListeners, HostEmitters>();
 
 ## API
 
-- `on: (type: EventType, listener: (event: Listeners[EventType]) => void, schema?: ZodSchema<unknown>, options?: AddEventListenerOptions): void`
+- `on: (type: EventType, key: KeyOfMapKey, listener: (event: Listeners[EventType]) => void, schema?: ZodSchema<unknown>, options?: AddEventListenerOptions): void`
   - Listen for an event. The event listener will be added to the `window` by calling `window.addEventListener`.
-  - If `schema` is provided for payload, it will be parsed when the event executes. The `safeParse` method is used, any errors due to parsing are attached to the event object `event.error`.
-- `remove: (type: keyof Listeners)`
-  - Event will be removed from `window`.
+  - The listener is stored internally by the serialization of `{type, key}` where `key` can be any serializable value other than `null`.
+  - If `schema` is provided for payload, it will be parsed when the event executes. The `safeParse` method is used, any errors due to parsing are attached to the event object `event.error`. _Note: event.detail payload is gauranteed. Errors should be handled first in listeners._
+- `remove: ({type: keyof Listeners, key: KeyOfMapKey})`
+  - Event listener will be removed from `window` that matches the provided `type` and `key`.
 - `emit: (type: EventType, ctx: Emitters[EventType]["detail"]): void`
   - Emit an event. This will create a `new CustomEvent` and will call `window.dispatchEvent`.
   - The context (`ctx`) of the event is the payload.
