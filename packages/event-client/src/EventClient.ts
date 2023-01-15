@@ -4,21 +4,39 @@ export type Event<T> = CustomEvent<T> & {
   error?: ZodError<Partial<T>>;
 };
 
+type KeyOfMapKey = string | unknown[] | object | number | boolean;
+
+type MapKey<T> = {
+  type: T;
+  key: KeyOfMapKey;
+};
+
+type MapValue<T> = {
+  listener: T;
+};
+
 /**
  * A client for emitting and listening to events via the window object.
- * @example const client = new EventsClient();
+ * @example const client = new EventsClient<Listeners, Emitters>();
  */
 export class EventsClient<
   Listeners extends Record<string, Event<unknown>>,
   Emitters extends Record<string, Event<unknown>>
 > {
-  private events = new Map<keyof Listeners, unknown>();
+  private listeners = new Map<string, MapValue<unknown>>([]);
 
   /**
    * Listen to an event. Optionally, provide a `ZodSchema` to validate the event payload.
+   * @param type The event type.
+   * @param key The event key.
+   * @param listener The event listener.
+   * @param schema A `ZodSchema` to validate the event payload.
+   * @param options The event listener options.
+   * @example client.on("addToCart", "someKey", (event) => { console.log(event.detail) });
    */
   on<EventType extends keyof Listeners>(
     type: EventType,
+    key: KeyOfMapKey,
     listener: (event: Listeners[EventType]) => void,
     schema?: ZodSchema,
     options?: AddEventListenerOptions
@@ -33,7 +51,9 @@ export class EventsClient<
       listener(event);
     };
 
-    this.events.set(type, customListener);
+    this.listeners.set(this.serializeKey({ type, key }), {
+      listener: customListener,
+    });
 
     window.addEventListener(
       type as keyof WindowEventMap,
@@ -44,18 +64,26 @@ export class EventsClient<
 
   /**
    * Remove an event listener.
+   * @param type The event type.
+   * @param key The event key.
+   * @example client.remove("addToCart", "someKey");
    */
-  remove(type: keyof Listeners): void {
-    const listener = this.events.get(type);
-    this.events.delete(type);
-    window.removeEventListener(
-      type as keyof WindowEventMap,
-      listener as EventListenerOrEventListenerObject
-    );
+  remove({ type, key }: MapKey<keyof Listeners>): void {
+    const listener = this.listeners.get(this.serializeKey({ type, key }));
+    const deleted = this.listeners.delete(this.serializeKey({ type, key }));
+    if (deleted) {
+      window.removeEventListener(
+        type as keyof WindowEventMap,
+        listener?.listener as EventListener
+      );
+    }
   }
 
   /**
    * Emit an event.
+   * @param type The event type.
+   * @param ctx The event payload.
+   * @example client.emit("addToCart", { id: "someItemId" });
    */
   emit<EventType extends keyof Emitters>(
     type: EventType,
@@ -70,6 +98,9 @@ export class EventsClient<
   /**
    * Invoke a defined `Listener` event. This is functionally equivalent to `emit` but
    * provides type definition for Listeners.
+   * @param type The event type.
+   * @param ctx The event payload.
+   * @example client.invoke("addToCart", { id: "someItemId" });
    */
   invoke<EventType extends keyof Listeners>(
     type: EventType,
@@ -79,5 +110,25 @@ export class EventsClient<
       detail: ctx,
     });
     window.dispatchEvent(event);
+  }
+
+  /**
+   * Get all listeners.
+   * @returns A `Map` of all listeners.
+   * @example const listeners = client.getListeners();
+   */
+  getListeners() {
+    return this.listeners;
+  }
+
+  /**
+   * Serialize a `MapKey` to a string.
+   * @param type The event type.
+   * @param key The event key.
+   * @returns A stringified `MapKey`.
+   * @example const serialized = client.serializeKey({ type: "click", key: "button" });
+   */
+  private serializeKey({ type, key }: MapKey<keyof Listeners>): string {
+    return JSON.stringify({ type, key });
   }
 }
