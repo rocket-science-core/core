@@ -1,4 +1,4 @@
-# @rocket-science-core/event-client
+# @rocket-science/event-client
 
 ## 3.0.0
 

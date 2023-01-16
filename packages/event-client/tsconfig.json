@@ -4,6 +4,6 @@
     "target": "esnext",
     "module": "esnext"
   },
-  "extends": "@rocket-science-core/tsconfig/base.json",
+  "extends": "@rocket-science/tsconfig/base.json",
   "include": ["src"]
 }

@@ -5,7 +5,7 @@ importers:
   .:
     specifiers:
       '@changesets/cli': ^2.26.0
-      '@rocket-science-core/eslint-config-custom': workspace:*
+      '@rocket-science/eslint-config-custom': workspace:*
       commitizen: ^4.2.6
       cz-conventional-changelog: ^3.3.0
       prettier: latest
@@ -13,7 +13,7 @@ importers:
       turbo: latest
     devDependencies:
       '@changesets/cli': 2.26.0
-      '@rocket-science-core/eslint-config-custom': link:packages/eslint-config-custom
+      '@rocket-science/eslint-config-custom': link:packages/eslint-config-custom
       commitizen: 4.2.6
       cz-conventional-changelog: 3.3.0
       prettier: 2.8.3
@@ -39,9 +39,9 @@ importers:
 
   packages/event-client:
     specifiers:
-      '@rocket-science-core/eslint-config-custom': workspace:*
-      '@rocket-science-core/jest-presets': workspace:*
-      '@rocket-science-core/tsconfig': workspace:*
+      '@rocket-science/eslint-config-custom': workspace:*
+      '@rocket-science/jest-presets': workspace:*
+      '@rocket-science/tsconfig': workspace:*
       '@types/jest': ^29.2.5
       eslint: ^7.32.0
       jest: ^29.3.1
@@ -49,9 +49,9 @@ importers:
       typescript: ^4.8.3
       zod: ^3.20.2
     devDependencies:
-      '@rocket-science-core/eslint-config-custom': link:../eslint-config-custom
-      '@rocket-science-core/jest-presets': link:../jest-presets
-      '@rocket-science-core/tsconfig': link:../tsconfig
+      '@rocket-science/eslint-config-custom': link:../eslint-config-custom
+      '@rocket-science/jest-presets': link:../jest-presets
+      '@rocket-science/tsconfig': link:../tsconfig
       '@types/jest': 29.2.5
       eslint: 7.32.0
       jest: 29.3.1

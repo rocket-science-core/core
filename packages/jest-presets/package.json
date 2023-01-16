@@ -1,5 +1,5 @@
 {
-  "name": "@rocket-science-core/jest-presets",
+  "name": "@rocket-science/jest-presets",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",

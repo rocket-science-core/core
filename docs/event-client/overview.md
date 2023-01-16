@@ -1,7 +1,7 @@
 A lightweight event client that augments DOM events.
 
-<a href="https://bundlephobia.com/package/@rocket-science-core/event-client@latest" target="\_parent">
-<img alt="" src="https://badgen.net/bundlephobia/minzip/@rocket-science-core/event-client" />
+<a href="https://bundlephobia.com/package/@rocket-science/event-client@latest" target="\_parent">
+<img alt="" src="https://badgen.net/bundlephobia/minzip/@rocket-science/event-client" />
 </a>
 
 - [Motivation](#motivation)
@@ -24,18 +24,18 @@ While possible, it can be challenging to implement a good type and event payload
 Install package in **remote**.
 
 ```bash
-npm install @rocket-science-core/event-client
+npm install @rocket-science/event-client
 
-yarn add @rocket-science-core/event-client
+yarn add @rocket-science/event-client
 
-pnpm add @rocket-science-core/event-client
+pnpm add @rocket-science/event-client
 ```
 
 Instantiate new client in **remote**.
 
 ```js
 import React, { useState, useEffect } from "react";
-import { EventsClient } from "@rocket-science-core/event-client";
+import { EventsClient } from "@rocket-science/event-client";
 
 const eventsClient = new EventsClient();
 
@@ -71,7 +71,7 @@ Instantiate new client in **host**.
 import React, { useEffect } from "react";
 import { ItemList } from "./ItemList";
 import { items } from "./items";
-import { EventsClient } from "@rocket-science-core/event-client";
+import { EventsClient } from "@rocket-science/event-client";
 const RemoteCart = React.lazy(() => import("@ahowardtech/checkout/Cart"));
 
 const eventsClient = new EventsClient();
@@ -118,7 +118,7 @@ You can define events by importing the `Event` type and passing the event's payl
 
 ```ts
 import { z } from "zod";
-import { Event } from "@rocket-science-core/event-client";
+import { Event } from "@rocket-science/event-client";
 
 export const ItemSchema = z.object({
   id: z.number(),
@@ -144,7 +144,7 @@ Pass `Listeners` and `Emitters` types to the event client on instantiation.
 
 ```ts
 import React, { useState, useEffect } from "react";
-import { EventsClient } from "@rocket-science-core/event-client";
+import { EventsClient } from "@rocket-science/event-client";
 import { Button } from "../Button";
 import {
   Listeners as CartListeners,
@@ -218,7 +218,7 @@ In **host**, instantiate the client and pass the **remote(s)** `Listeners` as th
 import React from "react";
 import { ItemList } from "./ItemList";
 import { items } from "./items";
-import { EventsClient } from "@rocket-science-core/event-client";
+import { EventsClient } from "@rocket-science/event-client";
 import {
   Item,
   Listeners as CartListeners,

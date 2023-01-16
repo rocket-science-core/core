@@ -1,6 +1,6 @@
 {
-  "name": "@rocket-science-core/event-client",
-  "version": "3.0.0",
+  "name": "@rocket-science/event-client",
+  "version": "0.1.0",
   "description": "Event library for the browser",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -18,9 +18,9 @@
     "lint": "TIMING=1 eslint \"src/**/*.ts*\""
   },
   "devDependencies": {
-    "@rocket-science-core/eslint-config-custom": "workspace:*",
-    "@rocket-science-core/jest-presets": "workspace:*",
-    "@rocket-science-core/tsconfig": "workspace:*",
+    "@rocket-science/eslint-config-custom": "workspace:*",
+    "@rocket-science/jest-presets": "workspace:*",
+    "@rocket-science/tsconfig": "workspace:*",
     "eslint": "^7.32.0",
     "jest": "^29.3.1",
     "rimraf": "^3.0.2",
@@ -29,7 +29,7 @@
     "@types/jest": "^29.2.5"
   },
   "jest": {
-    "preset": "@rocket-science-core/jest-presets/jest/jsdom"
+    "preset": "@rocket-science/jest-presets/jest/jsdom"
   },
   "peerDependencies": {
     "zod": ">= 3.0.0"
