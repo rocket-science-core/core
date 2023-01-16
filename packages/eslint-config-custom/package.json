@@ -1,5 +1,5 @@
 {
-  "name": "@rocket-science-core/eslint-config-custom",
+  "name": "@rocket-science/eslint-config-custom",
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",

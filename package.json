@@ -1,5 +1,5 @@
 {
-  "name": "@rocket-science-core/core",
+  "name": "@rocket-science/core",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
-    "@rocket-science-core/eslint-config-custom": "workspace:*",
+    "@rocket-science/eslint-config-custom": "workspace:*",
     "commitizen": "^4.2.6",
     "cz-conventional-changelog": "^3.3.0",
     "prettier": "latest",

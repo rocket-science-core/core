@@ -1,5 +1,5 @@
 {
-  "name": "@rocket-science-core/tsconfig",
+  "name": "@rocket-science/tsconfig",
   "version": "0.0.0",
   "private": true,
   "files": [
