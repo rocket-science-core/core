@@ -1,6 +1,6 @@
 {
   "name": "@rocket-science/event-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Event library for the browser",
   "main": "dist/index.js",
   "source": "src/index.ts",
