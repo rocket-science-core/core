@@ -1,5 +1,11 @@
 # @rocket-science/event-client
 
+## 0.1.1
+
+### Patch Changes
+
+- 5b4b963: Migrate to new npm org package scope rocket-science.
+
 ## 3.0.0
 
 ### Major Changes
