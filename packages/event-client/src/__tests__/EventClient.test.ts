@@ -1,4 +1,4 @@
-import { EventsClient, Event } from "../EventClient";
+import { EventsClient, Event as ClientEvent } from "../EventClient";
 
 describe("EventClient", () => {
   const client = new EventsClient();
@@ -16,30 +16,32 @@ describe("EventClient", () => {
           expect(options).toBeUndefined();
         }
       );
-    client.on("test", "test", () => {});
+    client.on("test", "test", ({ detail }) => {
+      expect(detail).toEqual({ test: "test" });
+    });
     client.emit("test", { test: "test" });
     expect(client.getListeners().size).toBe(1);
   });
   it("emit method should dispatch event to window", () => {
+    const listener = (event: ClientEvent<{ test: "test" }>): boolean => {
+      expect(event.type).toBe("test");
+      expect(event.detail).toEqual({ test: "test" });
+      return true;
+    };
     jest
       .spyOn(window, "dispatchEvent")
-      // @ts-ignore
-      .mockImplementationOnce((event: Event<{ test: "test" }>): boolean => {
-        expect(event.type).toBe("test");
-        expect(event.detail).toEqual({ test: "test" });
-        return true;
-      });
+      .mockImplementationOnce(listener as unknown as (event: Event) => boolean);
     client.emit("test", { test: "test" });
   });
   it("invoke method should invoke event listener", () => {
+    const listener = (event: ClientEvent<{ test: "test" }>): boolean => {
+      expect(event.type).toBe("test");
+      expect(event.detail).toEqual({ test: "test" });
+      return true;
+    };
     jest
       .spyOn(window, "dispatchEvent")
-      // @ts-ignore
-      .mockImplementationOnce((event: Event<{ test: "test" }>): boolean => {
-        expect(event.type).toBe("test");
-        expect(event.detail).toEqual({ test: "test" });
-        return true;
-      });
+      .mockImplementationOnce(listener as unknown as (event: Event) => boolean);
     client.invoke("test", { test: "test" });
   });
   it("remove method should remove event from listeners and window", () => {
