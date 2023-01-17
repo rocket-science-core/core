@@ -1,5 +1,11 @@
 # @rocket-science/event-client
 
+## 0.2.0
+
+### Minor Changes
+
+- 9e4bd39: New removeAll method will iterate through internally stored listeners and remove them from window as well as remove from the internal store. API documentation updated. Unit tests added.
+
 ## 0.1.1
 
 ### Patch Changes
