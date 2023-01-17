@@ -122,6 +122,17 @@ export class EventsClient<
   }
 
   /**
+   * Removes all listeners registered in the client.
+   * @returns void
+   * @example client.removeAll();
+   */
+  removeAll() {
+    this.listeners.forEach((_, key) => {
+      this.remove(this.deserializeKey(key));
+    });
+  }
+
+  /**
    * Serialize a `MapKey` to a string.
    * @param type The event type.
    * @param key The event key.
@@ -130,5 +141,15 @@ export class EventsClient<
    */
   private serializeKey({ type, key }: MapKey<keyof Listeners>): string {
     return JSON.stringify({ type, key });
+  }
+
+  /**
+   * Deserialize a stringified `MapKey` to a `MapKey`.
+   * @param key A stringified `MapKey`.
+   * @returns A `MapKey`.
+   * @example const deserialized = client.deserializeKey('{"type":"click","key":"button"}');
+   */
+  private deserializeKey(key: string): MapKey<keyof Listeners> {
+    return JSON.parse(key);
   }
 }
