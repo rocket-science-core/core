@@ -61,4 +61,24 @@ describe("EventClient", () => {
     client.remove({ type: "test", key: "test" });
     expect(client.getListeners().size).toBe(0);
   });
+  it("clear method should remove all events from listeners and window", () => {
+    jest
+      .spyOn(window, "removeEventListener")
+      .mockImplementationOnce(
+        (
+          type: string,
+          listener: EventListenerOrEventListenerObject,
+          options?: boolean | EventListenerOptions
+        ) => {
+          expect(type).toBe("test");
+          expect(listener).toBeInstanceOf(Function);
+          expect(options).toBeUndefined();
+        }
+      );
+    client.on("test", "test", ({ detail }) => {
+      expect(detail).toEqual({ test: "test" });
+    });
+    client.removeAll();
+    expect(client.getListeners().size).toBe(0);
+  });
 });
