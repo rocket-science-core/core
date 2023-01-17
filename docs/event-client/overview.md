@@ -288,6 +288,10 @@ const eventsClient = new EventsClient<HostListeners, HostEmitters>();
   - The context (`ctx`) of the event is the payload.
 - `invoke: (type: EventType, ctx: Listeners[EventType]["detail"]): void`
   - Synonymous in functionality with `emit` but will provide type definitions for emitting a client's Listener.
+- `getListeners: (): typeof this.listeners`
+  - A function to get access to the internal Map that holds the listeners for the client.
+- `removeAll: (): void`
+  - A function that will remove all listeners registered in the client.
 
 ## Examples
 
