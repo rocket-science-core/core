@@ -55,8 +55,8 @@ export class EventsClient<
       listener: customListener,
     });
 
-    window.addEventListener(
-      type as keyof WindowEventMap,
+    globalThis.addEventListener(
+      type as keyof GlobalEventHandlersEventMap,
       customListener as EventListener,
       options
     );
@@ -72,8 +72,8 @@ export class EventsClient<
     const listener = this.listeners.get(this.serializeKey({ type, key }));
     const deleted = this.listeners.delete(this.serializeKey({ type, key }));
     if (deleted) {
-      window.removeEventListener(
-        type as keyof WindowEventMap,
+      globalThis.removeEventListener(
+        type as keyof GlobalEventHandlersEventMap,
         listener?.listener as EventListener
       );
     }
@@ -89,10 +89,10 @@ export class EventsClient<
     type: EventType,
     ctx: Emitters[EventType]["detail"]
   ): void {
-    const event = new CustomEvent(type as keyof WindowEventMap, {
+    const event = new CustomEvent(type as keyof GlobalEventHandlersEventMap, {
       detail: ctx,
     });
-    window.dispatchEvent(event);
+    globalThis.dispatchEvent(event);
   }
 
   /**
@@ -106,10 +106,10 @@ export class EventsClient<
     type: EventType,
     ctx: Listeners[EventType]["detail"]
   ): void {
-    const event = new CustomEvent(type as keyof WindowEventMap, {
+    const event = new CustomEvent(type as keyof GlobalEventHandlersEventMap, {
       detail: ctx,
     });
-    window.dispatchEvent(event);
+    globalThis.dispatchEvent(event);
   }
 
   /**
