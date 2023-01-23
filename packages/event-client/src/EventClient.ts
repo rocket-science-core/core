@@ -1,19 +1,25 @@
-import { ZodSchema, ZodError } from "zod";
+import { Schema as ZodSchema, ZodError } from "zod";
 
-export type Event<T> = CustomEvent<T> & {
-  error?: ZodError<Partial<T>>;
-};
+export interface Event<T> extends CustomEvent<T> {
+  error?: ZodError<T>;
+}
 
 type KeyOfMapKey = string | unknown[] | object | number | boolean;
 
-type MapKey<T> = {
+interface MapKey<T> {
   type: T;
   key: KeyOfMapKey;
-};
+}
 
-type MapValue<T> = {
+interface MapValue<T> {
   listener: T;
-};
+}
+
+type EventOutput<PossibleEvents, SchemaType> = SchemaType extends ZodSchema
+  ? PossibleEvents
+  : Omit<PossibleEvents, "error"> & { error: never };
+
+type SchemaType<T> = T extends ZodSchema ? T : never;
 
 /**
  * A client for emitting and listening to events via the window object.
@@ -34,14 +40,16 @@ export class EventsClient<
    * @param options The event listener options.
    * @example client.on("addToCart", "someKey", (event) => { console.log(event.detail) });
    */
-  on<EventType extends keyof Listeners>(
+  on<EventType extends keyof Listeners, Schema>(
     type: EventType,
     key: KeyOfMapKey,
-    listener: (event: Listeners[EventType]) => void,
-    schema?: ZodSchema,
+    listener: (event: EventOutput<Listeners[EventType], Schema>) => void,
+    schema?: SchemaType<Schema>,
     options?: AddEventListenerOptions
   ): void {
-    const customListener: typeof listener = (event: Listeners[EventType]) => {
+    const customListener: typeof listener = (
+      event: EventOutput<Listeners[EventType], Schema>
+    ) => {
       if (schema) {
         const result = schema.safeParse(event.detail);
         if (!result.success) {
