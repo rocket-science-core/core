@@ -1,4 +1,4 @@
-import { Schema as ZodSchema, ZodError } from "zod";
+import { ZodSchema, ZodError } from "zod";
 
 export interface Event<T> extends CustomEvent<T> {
   error?: ZodError<T>;
@@ -15,9 +15,11 @@ interface MapValue<T> {
   listener: T;
 }
 
-type EventOutput<PossibleEvents, SchemaType> = SchemaType extends ZodSchema
-  ? PossibleEvents
-  : Omit<PossibleEvents, "error"> & { error: never };
+type Events = Record<string, Event<unknown>>;
+
+type EventOutput<EventType, SchemaType> = SchemaType extends ZodSchema
+  ? EventType
+  : Omit<EventType, "error"> & { error: never };
 
 type SchemaType<T> = T extends ZodSchema ? T : never;
 
@@ -25,10 +27,7 @@ type SchemaType<T> = T extends ZodSchema ? T : never;
  * A client for emitting and listening to events via the window object.
  * @example const client = new EventsClient<Listeners, Emitters>();
  */
-export class EventsClient<
-  Listeners extends Record<string, Event<unknown>>,
-  Emitters extends Record<string, Event<unknown>>
-> {
+export class EventsClient<Listeners extends Events, Emitters extends Events> {
   private listeners = new Map<string, MapValue<unknown>>([]);
 
   /**
@@ -47,9 +46,7 @@ export class EventsClient<
     schema?: SchemaType<Schema>,
     options?: AddEventListenerOptions
   ): void {
-    const customListener: typeof listener = (
-      event: EventOutput<Listeners[EventType], Schema>
-    ) => {
+    const customListener: typeof listener = (event) => {
       if (schema) {
         const result = schema.safeParse(event.detail);
         if (!result.success) {
