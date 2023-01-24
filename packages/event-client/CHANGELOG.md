@@ -1,5 +1,11 @@
 # @rocket-science/event-client
 
+## 0.2.1
+
+### Patch Changes
+
+- 3dcf3ac: Error type in event type will now be of type 'never' when no payload schema is provided
+
 ## 0.2.0
 
 ### Minor Changes
