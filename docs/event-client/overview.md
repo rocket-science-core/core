@@ -45,14 +45,14 @@ export const Cart = () => {
   useEffect(() => {
     eventsClient.on(
       "addItemToCart",
-      "setToState",
+      "checkout",
       ({ detail }) => {
         setItems((current) => [detail, ...current]);
         eventsClient.emit("itemAddedToCart", detail);
       }
     );
     return () => {
-      eventsClient.remove({ type: "addItemToCart", key: "setToState"});
+      eventsClient.remove({ type: "addItemToCart", key: "checkout"});
     };
   }, []);
 
@@ -69,31 +69,29 @@ Instantiate new client in **host**.
 
 ```js
 import React, { useEffect } from "react";
-import { ItemList } from "./ItemList";
-import { items } from "./items";
 import { EventsClient } from "@rocket-science/event-client";
-const RemoteCart = React.lazy(() => import("@ahowardtech/checkout/Cart"));
+import { Button } from "../components/Button";
+const RemoteCart = React.lazy(() => import("@checkout/Cart"));
 
 const eventsClient = new EventsClient();
 
-const handleClick = (item) => {
+const handleAddToCart = (item) => {
   eventsClient.emit("addItemToCart", item);
 };
 
 const App = () => {
   useEffect(() => {
-    eventsClient.on("itemAddedToCart", "logToConsole", ({ detail }) => {
+    eventsClient.on("itemAddedToCart", "host", ({ detail }) => {
       console.log(`Item added to cart: ${detail.price}`);
     });
     return () => {
-      eventsClient.remove({ type: "itemAddedToCart", key: "logToConsole" });
+      eventsClient.remove({ type: "itemAddedToCart", key: "host" });
     };
   }, []);
 
   return (
     <div>
-      <h1>Ecomm Store</h1>
-      <ItemList items={items} handleAddToCart={handleClick} />
+      <Button addToCart={handleAddToCart} />
       <React.Suspense fallback="loading cart">
         <RemoteCart></RemoteCart>
       </React.Suspense>
@@ -147,25 +145,25 @@ import React, { useState, useEffect } from "react";
 import { EventsClient } from "@rocket-science/event-client";
 import { Button } from "../Button";
 import {
-  Listeners as CartListeners,
+  Listeners,
   Item,
   ItemSchema,
-  Emitters as CartEmitters,
+  Emitters,
 } from "./Cart.schema";
 
-const eventsClient = new EventsClient<CartListeners, CartEmitters>();
+const eventsClient = new EventsClient<Listeners, Emitters>();
 
 export const Cart = () => {
   const [items, setItems] = useState<Item[]>([]);
 
-  const handleRemoveButtonClick = (item: Item) => {
+  const handleRemoveFromCart = (item: Item) => {
     eventsClient.invoke("removeItemFromCart", item);
   };
 
   useEffect(() => {
     eventsClient.on(
       "addItemToCart",
-      "setItemToState",
+      "checkout",
       ({ detail, error }) => {
         if (error) {
           console.error(error)
@@ -178,7 +176,7 @@ export const Cart = () => {
     );
     eventsClient.on(
       "removeItemFromCart",
-      "remoteItemFromState",
+      "checkout",
       ({ detail, error }) => {
         if (error) {
           console.error(error)
@@ -196,8 +194,7 @@ export const Cart = () => {
       ItemSchema
     );
     return () => {
-      eventsClient.remove("addItemToCart", "setItemToState");
-      eventsClient.remove("removeItemFromCart", "removeItemFromState");
+      eventsClient.removeAll();
     };
   }, []);
 
@@ -205,7 +202,7 @@ export const Cart = () => {
     <div>
       {...}
       <Button
-        handleClick={() => handleRemoveButtonClick(item)}
+        handleClick={() => handleRemoveFromCart(item)}
       />
     </div>
   );
@@ -216,15 +213,14 @@ In **host**, instantiate the client and pass the **remote(s)** `Listeners` as th
 
 ```ts
 import React from "react";
-import { ItemList } from "./ItemList";
-import { items } from "./items";
 import { EventsClient } from "@rocket-science/event-client";
+import { Button } from "../components/Button";
 import {
   Item,
   Listeners as CartListeners,
   Emitters as CartEmitters,
-} from "@ahowardtech/checkout/Cart.schema";
-const RemoteCart = React.lazy(() => import("@ahowardtech/checkout/Cart"));
+} from "@checkout/Cart.schema";
+const RemoteCart = React.lazy(() => import("@checkout/Cart"));
 
 const eventsClient = new EventsClient<CartEmitters, CartListeners>();
 
@@ -234,23 +230,20 @@ const handleClick = (item: Item) => {
 
 const App = () => {
   useEffect(() => {
-    eventsClient.on("itemAddedToCart", "logToConsole", ({ detail }) => {
+    eventsClient.on("itemAddedToCart", "host", ({ detail }) => {
       console.log(`Item added to cart: ${detail.price}`);
     });
     return () => {
-      eventsClient.remove({ type: "itemAddedToCart", key: "logToConsole" });
+      eventsClient.removeAll();
     };
   }, []);
   return (
-    <AppWrapper>
-      <h1>Ecomm Store</h1>
-      <div className="app-content">
-        <ItemList items={items} handleAddToCart={handleClick} />
-        <React.Suspense fallback="loading cart">
-          <RemoteCart></RemoteCart>
-        </React.Suspense>
-      </div>
-    </AppWrapper>
+    <div>
+      <Button handleAddToCart={handleClick} />
+      <React.Suspense fallback="loading cart">
+        <RemoteCart></RemoteCart>
+      </React.Suspense>
+    </div>
   );
 };
 
@@ -277,7 +270,7 @@ const eventsClient = new EventsClient<HostListeners, HostEmitters>();
 
 ## API
 
-- `on: (type: EventType, key: KeyOfMapKey, listener: (event: Listeners[EventType]) => void, schema?: ZodSchema<unknown>, options?: AddEventListenerOptions): void`
+- `on: (type: EventType, key: KeyOfMapKey, listener: (event: EventOutput<Listeners[EventType], Schema>) => void, schema?: SchemaType<Schema>, options?: AddEventListenerOptions): void`
   - Listen for an event. The event listener will be added to the `window` by calling `window.addEventListener`.
   - The listener is stored internally by the serialization of `{type, key}` where `key` can be any serializable value other than `null`.
   - If `schema` is provided for payload, it will be parsed when the event executes. The `safeParse` method is used, any errors due to parsing are attached to the event object `event.error`. _Note: event.detail payload is gauranteed. Errors should be handled first in listeners._
